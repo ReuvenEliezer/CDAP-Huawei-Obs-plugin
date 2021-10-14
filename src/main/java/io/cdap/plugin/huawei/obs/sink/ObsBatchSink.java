@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 @Plugin(type = BatchSink.PLUGIN_TYPE)
 @Name("Obs")
 @Description("Batch sink to use Huawei Obs as a sink.")
-public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfig> {
+public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConfig> {
   private static final String ENCRYPTION_VALUE = "AES256";
   private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
   private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
@@ -54,9 +54,9 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
   private static final String S3N_ENCRYPTION = "fs.s3n.server-side-encryption-algorithm";
   private static final String ACCESS_CREDENTIALS = "Access Credentials";
 
-  private final S3BatchSinkConfig config;
+  private final ObsBatchSinkConfig config;
 
-  public ObsBatchSink(S3BatchSinkConfig config) {
+  public ObsBatchSink(ObsBatchSinkConfig config) {
     super(config);
     this.config = config;
   }
@@ -66,32 +66,27 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
     Map<String, String> properties = new HashMap<>(config.getFilesystemProperties());
 
     if (ACCESS_CREDENTIALS.equalsIgnoreCase(config.authenticationMethod)) {
-      if (config.path.startsWith("s3a://")) {
-        properties.put(S3A_ACCESS_KEY, config.accessID);
+      if (config.path.startsWith("https://")) {
+        properties.put(S3A_ACCESS_KEY, config.secretKey);
         properties.put(S3A_SECRET_KEY, config.accessKey);
-      } else if (config.path.startsWith("s3n://")) {
-        properties.put(S3N_ACCESS_KEY, config.accessID);
-        properties.put(S3N_SECRET_KEY, config.accessKey);
-      }
+      }  //TODO fix
     }
 
     if (config.shouldEnableEncryption()) {
-      if (config.path.startsWith("s3a://")) {
+      if (config.path.startsWith("https://")) {
         properties.put(S3A_ENCRYPTION, ENCRYPTION_VALUE);
-      } else if (config.path.startsWith("s3n://")) {
-        properties.put(S3N_ENCRYPTION, ENCRYPTION_VALUE);
-      }
+      }  //TODO fix
     }
     return properties;
   }
 
   @Override
   protected void recordLineage(LineageRecorder lineageRecorder, List<String> outputFields) {
-    lineageRecorder.recordWrite("Write", "Wrote to S3.", outputFields);
+    lineageRecorder.recordWrite("Write", "Wrote to Obs.", outputFields);
   }
 
   @VisibleForTesting
-  S3BatchSinkConfig getConfig() {
+  ObsBatchSinkConfig getConfig() {
     return config;
   }
 
@@ -99,8 +94,8 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
    * S3 Sink configuration.
    */
   @SuppressWarnings("unused")
-  public static class S3BatchSinkConfig extends AbstractFileSinkConfig {
-    private static final String NAME_ACCESS_ID = "accessID";
+  public static class ObsBatchSinkConfig extends AbstractFileSinkConfig {
+    private static final String NAME_SECRET_KEY = "secretKey";
     private static final String NAME_ACCESS_KEY = "accessKey";
     private static final String NAME_PATH = "path";
     private static final String NAME_AUTH_METHOD = "authenticationMethod";
@@ -110,24 +105,24 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
     private static final Type MAP_STRING_STRING_TYPE = new TypeToken<Map<String, String>>() { }.getType();
 
     @Macro
-    @Description("The S3 path where the data is stored. Example: 's3a://logs' for " +
+    @Description("The Obs path where the data is stored. Example: 's3a://logs' for " +
       "S3AFileSystem or 's3n://logs' for S3NativeFileSystem.")
-    private String path;
+    private String path; //TODO fix
 
     @Macro
     @Nullable
-    @Description("Access ID of the Amazon S3 instance to connect to.")
-    private String accessID;
+    @Description("Secret KeyID of the Huawei Obs instance to connect to.")
+    private String secretKey;
 
     @Macro
     @Nullable
-    @Description("Access Key of the Amazon S3 instance to connect to.")
+    @Description("Access Key of the Huawei Obs instance to connect to.")
     private String accessKey;
 
     @Macro
     @Nullable
-    @Description("Authentication method to access S3. " +
-      "Defaults to Access Credentials. URI scheme should be s3a:// or s3n://.")
+    @Description("Authentication method to access Obs. " +
+      "Defaults to Access Credentials. URI scheme should be https://.")
     private String authenticationMethod;
 
     @Macro
@@ -142,7 +137,7 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
       + "This is an advanced feature that requires knowledge of the properties supported by the underlying filesystem.")
     private String fileSystemProperties;
 
-    S3BatchSinkConfig() {
+    ObsBatchSinkConfig() {
       // Set default value for Nullable properties.
       this.enableEncryption = false;
       this.authenticationMethod = ACCESS_CREDENTIALS;
@@ -157,9 +152,9 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
     public void validate(FailureCollector collector) {
       super.validate(collector);
       if (ACCESS_CREDENTIALS.equalsIgnoreCase(authenticationMethod)) {
-        if (!containsMacro(NAME_ACCESS_ID) && (accessID == null || accessID.isEmpty())) {
-          collector.addFailure("The Access ID must be specified if authentication method is Access Credentials.", null)
-            .withConfigProperty(NAME_ACCESS_ID).withConfigProperty(NAME_AUTH_METHOD);
+        if (!containsMacro(NAME_SECRET_KEY) && (secretKey == null || secretKey.isEmpty())) {
+          collector.addFailure("The Secret Key must be specified if authentication method is Access Credentials.", null)
+            .withConfigProperty(NAME_SECRET_KEY).withConfigProperty(NAME_AUTH_METHOD);
         }
         if (!containsMacro(NAME_ACCESS_KEY) && (accessKey == null || accessKey.isEmpty())) {
           collector.addFailure("The Access Key must be specified if authentication method is Access Credentials.", null)
@@ -167,8 +162,8 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.S3BatchSinkConfi
         }
       }
 
-      if (!containsMacro(NAME_PATH) && !path.startsWith("s3a://") && !path.startsWith("s3n://")) {
-        collector.addFailure("Path must start with s3a:// or s3n://.", null).withConfigProperty(NAME_PATH);
+      if (!containsMacro(NAME_PATH) && !path.startsWith("https://")) {
+        collector.addFailure("Path must start with https://.", null).withConfigProperty(NAME_PATH);
       }
 
       if (!containsMacro(NAME_FILE_SYSTEM_PROPERTIES)) {

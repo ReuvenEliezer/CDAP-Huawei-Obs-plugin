@@ -13,7 +13,7 @@ Properties
 ----------
 **Reference Name:** Name used to uniquely identify this sink for lineage, annotating metadata, etc.
 
-**Path:** Path to write to. For example, obs://<bucket>/path/to/output
+**Path:** Path to write to. For example, 'https://Bucket name.Domain name/Object name' Example: https://bucketname.obs.cn-north-4.myhuaweicloud.com/objectname
 
 **Path Suffix:** Time format for the output directory that will be appended to the path.
 For example, the format 'yyyy-MM-dd-HH-mm' will result in a directory of the form '2015-01-01-20-42'.
@@ -25,9 +25,12 @@ The format must be one of 'json', 'avro', 'parquet', 'csv', 'tsv', or 'delimited
 **Delimiter:** Delimiter to use if the format is 'delimited'.
 The delimiter will be ignored if the format is anything other than 'delimited'.
 
+**Authentication Method:** Authentication method to access Obs. The default value is Access Credentials.
+IAM can only be used if the plugin is run in an AWS environment, such as on EMR.
+
 **End Point:** End-Point to be used by the Obs Client.
 
-**Access Key:** Amazon access ID required for authentication.
+**Access Key:** Huawei access key required for authentication.
 
-**Secret Key:** Amazon access key required for authentication.
+**Secret Key:** Huawei secret key required for authentication.
 

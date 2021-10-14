@@ -51,7 +51,7 @@
           }
         },
         {
-          "widget-type": "textbox",
+          "widget-type": "password",
           "label": "Access Key",
           "name": "accessKey",
           "widget-attributes": {
@@ -96,7 +96,7 @@
           "label": "Path",
           "name": "path",
           "widget-attributes": {
-            "placeholder": "obs://<bucket>/path/to/input"
+            "placeholder": "https://<Bucket name>.<Domain name>/<Object name>"
           }
         },
         {

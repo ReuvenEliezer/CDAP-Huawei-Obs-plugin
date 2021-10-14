@@ -16,7 +16,7 @@ the credentials does not need to be provided.
 
 **Reference Name:** Name used to uniquely identify this source for lineage, annotating metadata, etc.
 
-**Path:** Path to read from. For example, obs://<bucket>/path/to/input
+**Path:** Path to read from. For example, 'https://Bucket name.Domain name/Object name' Example: https://bucketname.obs.cn-north-4.myhuaweicloud.com/objectname
 
 **Format:** Format of the data to read.
 The format must be one of 'avro', 'blob', 'csv', 'delimited', 'json', 'parquet', 'text', or 'tsv'.
@@ -26,11 +26,14 @@ If the format is 'text', the schema must contain a field named 'body' of type 's
 
 **Delimiter:** Delimiter to use when the format is 'delimited'. This will be ignored for other formats.
 
+**Authentication Method:** Authentication method to access Obs. The default value is Access Credentials.
+IAM can only be used if the plugin is run in an AWS environment, such as on EMR.
+
+**Access Key:** Huawei access key required for authentication.
+
+**Secret Key:** Huawei secret key required for authentication.
+
 **End Point:** End-Point to be used by the Obs Client.
-
-**Access Key:** Amazon access ID required for authentication.
-
-**Secret Key:** Amazon access key required for authentication.
 
 **Maximum Split Size:** Maximum size in bytes for each input partition.
 Smaller partitions will increase the level of parallelism, but will require more resources and overhead.

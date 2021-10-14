@@ -20,7 +20,7 @@
 //    private static final String endPoint = "obs.ae-ad-1.g42cloud.com";
 //    private static final String accessKey = "FZZTMMWMEDNU41Q9PRHF";
 //    private static final String secretKey = "w3j6iX332106RIChc5A8Zn4xfkRRoct3ZNZbrfpO";
-//
+//obs://eliezer-test/calls.csv
 //    @Test
 //    public void doSomeThing() {
 ////        ObsConnectorConfig obsConnectorConfig = new ObsConnectorConfig(accessKey, secretKey, endPoint);

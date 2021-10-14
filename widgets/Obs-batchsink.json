@@ -17,7 +17,7 @@
           "label": "Path",
           "name": "path",
           "widget-attributes": {
-            "placeholder": "obs://<bucket>/path/to/output"
+            "placeholder": "https://<Bucket name>.<Domain name>/<Object name>"
           }
         },
         {

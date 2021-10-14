@@ -29,56 +29,86 @@ import javax.annotation.Nullable;
  */
 public class ObsConnectorConfig extends PluginConfig {
 
-  public static final String NAME_ACCESS_KEY = "accessKey";
-  public static final String NAME_SECRET_KEY = "secretKey";
+    public static final String ACCESS_CREDENTIALS = "Access Credentials";
+    public static final String NAME_ACCESS_KEY = "accessKey";
+    public static final String NAME_SECRET_KEY = "secretKey";
+    public static final String NAME_AUTH_METHOD = "authenticationMethod";
+    public static final String NAME_REGION = "region";
 
-  @Macro
-  @Nullable
-  @Description("Access Key of the Huawei Obs instance to connect to.")
-  private String accessKey;
+    @Macro
+    @Nullable
+    @Description("Access Key of the Huawei Obs instance to connect to.")
+    private String accessKey;
 
-  @Macro
-  @Nullable
-  @Description("Secret Key of the Huawei Obs instance to connect to.")
-  private String secretKey;
+    @Macro
+    @Nullable
+    @Description("Secret Key of the Huawei Obs instance to connect to.")
+    private String secretKey;
 
-  @Macro
-  @Nullable
-  @Description("End-Point to be used by the Obs Client.")
-  private String endPoint;
-
-
-  public ObsConnectorConfig(@Nullable String accessKey, @Nullable String secretKey, @Nullable String endPoint) {
-    this.accessKey = accessKey;
-    this.secretKey = secretKey;
-    this.endPoint = endPoint;
-  }
-
-  @Nullable
-  public String getAccessKey() {
-    return accessKey;
-  }
-
-  @Nullable
-  public String getSecretKey() {
-    return secretKey;
-  }
-
-  @Nullable
-  public String getEndPoint() {
-    return endPoint;
-  }
+    @Macro
+    @Nullable
+    @Description("Authentication method to access S3. Defaults to Access Credentials.")
+    private String authenticationMethod;
 
 
-  public void validate(FailureCollector collector) {
+    @Macro
+    @Nullable
+    @Description("End-Point to be used by the Obs Client.")
+    private String endPoint;
 
-    if (!containsMacro("accessKey") && (accessKey == null || accessKey.isEmpty())) {
-      collector.addFailure("The Access Key must be specified if authentication method is Access Credentials.", null)
-        .withConfigProperty(NAME_ACCESS_KEY);
+
+    public ObsConnectorConfig() {
+        authenticationMethod = ACCESS_CREDENTIALS;
     }
-    if (!containsMacro("secretKey") && (secretKey == null || secretKey.isEmpty())) {
-      collector.addFailure("The Secret Key Key must be specified if authentication method is Access Credentials.", null)
-        .withConfigProperty(NAME_SECRET_KEY);
+
+    public ObsConnectorConfig(@Nullable String accessKey, @Nullable String secretKey, @Nullable String authenticationMethod, @Nullable String endPoint) {
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
+        this.authenticationMethod = authenticationMethod;
+        this.endPoint = endPoint;
     }
-  }
+
+    @Nullable
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    @Nullable
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    @Nullable
+    public String getAuthenticationMethod() {
+        return authenticationMethod;
+    }
+
+    @Nullable
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+
+    public boolean isAccessCredentials() {
+        return ACCESS_CREDENTIALS.equalsIgnoreCase(authenticationMethod);
+    }
+
+    public void validate(FailureCollector collector) {
+        if (containsMacro(NAME_AUTH_METHOD)) {
+            return;
+        }
+
+        if (!ACCESS_CREDENTIALS.equals(authenticationMethod)) {
+            return;
+        }
+
+        if (!containsMacro("secretKey") && (secretKey == null || secretKey.isEmpty())) {
+            collector.addFailure("The Secret Key must be specified if authentication method is Access Credentials.", null)
+                    .withConfigProperty(NAME_SECRET_KEY).withConfigProperty(NAME_AUTH_METHOD);
+        }
+        if (!containsMacro("accessKey") && (accessKey == null || accessKey.isEmpty())) {
+            collector.addFailure("The Access Key must be specified if authentication method is Access Credentials.", null)
+                    .withConfigProperty(NAME_ACCESS_KEY).withConfigProperty(NAME_AUTH_METHOD);
+        }
+    }
 }

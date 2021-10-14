@@ -11,11 +11,15 @@ Properties
 
 **Description:** Description of the connection.
 
+**Authentication Method:** Authentication method to access Obs. The default value is Access Credentials.
+IAM can only be used if the plugin is run in an AWS environment, such as on EMR.
+
+**Access Key:** Huawei access key required for authentication.
+
+**Secret Key:** Huawei secret key required for authentication.
+
 **End Point:** End-Point to be used by the Obs Client.
 
-**Access Key:** Amazon access ID required for authentication.
-
-**Secret Key:** Amazon access key required for authentication.
 Path of the connection
 ----------------------
 To browse, get a sample from, or get the specification for this connection through
