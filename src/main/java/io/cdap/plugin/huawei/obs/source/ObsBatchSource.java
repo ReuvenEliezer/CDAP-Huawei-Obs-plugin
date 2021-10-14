@@ -87,7 +87,7 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchCon
 
     @Override
     protected void recordLineage(LineageRecorder lineageRecorder, List<String> outputFields) {
-        lineageRecorder.recordRead("Read", "Read from S3.", outputFields);
+        lineageRecorder.recordRead("Read", "Read from Obs.", outputFields);
     }
 
     @Override
