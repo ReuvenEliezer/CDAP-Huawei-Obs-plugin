@@ -20,9 +20,8 @@ package io.cdap.plugin.huawei.obs.common;
 /**
  * Constant for S3
  */
-public class S3Constants {
-  public static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
-  public static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
-  public static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
-  public static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
+public class ObsConstants {
+  public static final String OBS_ACCESS_KEY = "fs.obs.accessKey";
+  public static final String OBS_SECRET_KEY = "fs.obs.secretKey";
+  public static final String OBS_END_POINT = "fs.obs.endpoint";
 }

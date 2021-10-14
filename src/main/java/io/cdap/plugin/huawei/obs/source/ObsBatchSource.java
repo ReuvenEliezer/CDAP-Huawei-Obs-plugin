@@ -34,7 +34,7 @@ import io.cdap.plugin.format.input.PathTrackingInputFormat;
 import io.cdap.plugin.format.plugin.AbstractFileSource;
 import io.cdap.plugin.format.plugin.AbstractFileSourceConfig;
 import io.cdap.plugin.huawei.obs.common.ObsConnectorConfig;
-import io.cdap.plugin.huawei.obs.common.S3Constants;
+import io.cdap.plugin.huawei.obs.common.ObsConstants;
 import io.cdap.plugin.huawei.obs.connector.ObsConnector;
 
 import java.lang.reflect.Type;
@@ -71,8 +71,9 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchCon
         Map<String, String> properties = new HashMap<>(config.getFilesystemProperties());
         if (config.connection.isAccessCredentials()) {
             if (config.path.startsWith("https://")) {
-                properties.put(S3Constants.S3A_ACCESS_KEY, config.connection.getAccessKey());
-                properties.put(S3Constants.S3A_SECRET_KEY, config.connection.getSecretKey());
+                properties.put(ObsConstants.OBS_ACCESS_KEY, config.connection.getAccessKey());
+                properties.put(ObsConstants.OBS_SECRET_KEY, config.connection.getSecretKey());
+                properties.put(ObsConstants.OBS_END_POINT, config.connection.getEndPoint());
             } //TODO fix
         }
         if (config.shouldCopyHeader()) {

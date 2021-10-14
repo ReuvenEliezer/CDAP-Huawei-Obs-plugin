@@ -31,8 +31,8 @@ import io.cdap.plugin.format.connector.AbstractFileConnector;
 import io.cdap.plugin.format.connector.FileTypeDetector;
 import io.cdap.plugin.format.plugin.AbstractFileSourceConfig;
 import io.cdap.plugin.huawei.obs.common.ObsConnectorConfig;
+import io.cdap.plugin.huawei.obs.common.ObsConstants;
 import io.cdap.plugin.huawei.obs.common.ObsPath;
-import io.cdap.plugin.huawei.obs.common.S3Constants;
 import io.cdap.plugin.huawei.obs.source.ObsBatchSource;
 
 import java.io.File;
@@ -210,8 +210,9 @@ public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
             return properties;
         }
 
-        properties.put(S3Constants.S3N_SECRET_KEY, config.getSecretKey());
-        properties.put(S3Constants.S3N_ACCESS_KEY, config.getAccessKey());
+        properties.put(ObsConstants.OBS_SECRET_KEY, config.getSecretKey());
+        properties.put(ObsConstants.OBS_ACCESS_KEY, config.getAccessKey());
+        properties.put(ObsConstants.OBS_END_POINT, config.getEndPoint());
         return properties;
     }
 
