@@ -29,6 +29,8 @@ import io.cdap.cdap.etl.api.batch.BatchSinkContext;
 import io.cdap.plugin.common.LineageRecorder;
 import io.cdap.plugin.format.plugin.AbstractFileSink;
 import io.cdap.plugin.format.plugin.AbstractFileSinkConfig;
+import io.cdap.plugin.huawei.obs.common.ObsConstants;
+import io.cdap.plugin.huawei.obs.connector.ObsConnector;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -45,13 +47,7 @@ import javax.annotation.Nullable;
 @Description("Batch sink to use Huawei Obs as a sink.")
 public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConfig> {
   private static final String ENCRYPTION_VALUE = "AES256";
-  private static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
-  private static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
-  private static final String S3A_ENCRYPTION = "fs.s3a.server-side-encryption-algorithm";
-
-  private static final String S3N_ACCESS_KEY = "fs.s3n.awsAccessKeyId";
-  private static final String S3N_SECRET_KEY = "fs.s3n.awsSecretAccessKey";
-  private static final String S3N_ENCRYPTION = "fs.s3n.server-side-encryption-algorithm";
+  private static final String S3A_ENCRYPTION = "fs.s3a.server-side-encryption-algorithm"; //TODO fix
   private static final String ACCESS_CREDENTIALS = "Access Credentials";
 
   private final ObsBatchSinkConfig config;
@@ -67,8 +63,9 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConf
 
     if (ACCESS_CREDENTIALS.equalsIgnoreCase(config.authenticationMethod)) {
       if (config.path.startsWith("https://")) {
-        properties.put(S3A_ACCESS_KEY, config.secretKey);
-        properties.put(S3A_SECRET_KEY, config.accessKey);
+        properties.put(ObsConstants.OBS_SECRET_KEY, config.secretKey);
+        properties.put(ObsConstants.OBS_ACCESS_KEY, config.accessKey);
+        properties.put(ObsConstants.OBS_END_POINT, config.endPoint);
       }  //TODO fix
     }
 
@@ -96,6 +93,7 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConf
   @SuppressWarnings("unused")
   public static class ObsBatchSinkConfig extends AbstractFileSinkConfig {
     private static final String NAME_SECRET_KEY = "secretKey";
+    private static final String NAME_END_POINT = "endPoint";
     private static final String NAME_ACCESS_KEY = "accessKey";
     private static final String NAME_PATH = "path";
     private static final String NAME_AUTH_METHOD = "authenticationMethod";
@@ -111,13 +109,19 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConf
 
     @Macro
     @Nullable
+    @Description("Access Key of the Huawei Obs instance to connect to.")
+    private String accessKey;
+
+    @Macro
+    @Nullable
     @Description("Secret KeyID of the Huawei Obs instance to connect to.")
     private String secretKey;
 
     @Macro
     @Nullable
-    @Description("Access Key of the Huawei Obs instance to connect to.")
-    private String accessKey;
+    @Description("End-Point to be used by the Obs Client.")
+    private String endPoint;
+
 
     @Macro
     @Nullable
@@ -159,6 +163,10 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConf
         if (!containsMacro(NAME_ACCESS_KEY) && (accessKey == null || accessKey.isEmpty())) {
           collector.addFailure("The Access Key must be specified if authentication method is Access Credentials.", null)
             .withConfigProperty(NAME_ACCESS_KEY).withConfigProperty(NAME_AUTH_METHOD);
+        }
+        if (!containsMacro(NAME_END_POINT) && (endPoint == null || endPoint.isEmpty())) {
+          collector.addFailure("The End Point must be specified if authentication method is Access Credentials.", null)
+                  .withConfigProperty(NAME_END_POINT).withConfigProperty(NAME_AUTH_METHOD);
         }
       }
 

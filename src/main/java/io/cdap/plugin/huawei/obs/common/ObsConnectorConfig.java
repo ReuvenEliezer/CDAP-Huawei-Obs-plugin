@@ -32,8 +32,8 @@ public class ObsConnectorConfig extends PluginConfig {
     public static final String ACCESS_CREDENTIALS = "Access Credentials";
     public static final String NAME_ACCESS_KEY = "accessKey";
     public static final String NAME_SECRET_KEY = "secretKey";
+    public static final String NAME_END_POINT = "endPoint";
     public static final String NAME_AUTH_METHOD = "authenticationMethod";
-    public static final String NAME_REGION = "region";
 
     @Macro
     @Nullable
@@ -47,7 +47,7 @@ public class ObsConnectorConfig extends PluginConfig {
 
     @Macro
     @Nullable
-    @Description("Authentication method to access S3. Defaults to Access Credentials.")
+    @Description("Authentication method to access Obs. Defaults to Access Credentials.")
     private String authenticationMethod;
 
 
@@ -109,6 +109,10 @@ public class ObsConnectorConfig extends PluginConfig {
         if (!containsMacro("accessKey") && (accessKey == null || accessKey.isEmpty())) {
             collector.addFailure("The Access Key must be specified if authentication method is Access Credentials.", null)
                     .withConfigProperty(NAME_ACCESS_KEY).withConfigProperty(NAME_AUTH_METHOD);
+        }
+        if (!containsMacro("endPoint") && (endPoint == null || endPoint.isEmpty())) {
+            collector.addFailure("The End Point must be specified if authentication method is Access Credentials.", null)
+                    .withConfigProperty(NAME_END_POINT).withConfigProperty(NAME_AUTH_METHOD);
         }
     }
 }

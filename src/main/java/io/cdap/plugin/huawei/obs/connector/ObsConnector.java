@@ -222,7 +222,7 @@ public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
         Map<String, String> properties = new HashMap<>();
         properties.put(ConfigUtil.NAME_USE_CONNECTION, "true");
         properties.put(ConfigUtil.NAME_CONNECTION, request.getConnectionWithMacro());
-        properties.put(ObsBatchSource.S3BatchConfig.NAME_PATH, getFullPath(request.getPath()));
+        properties.put(ObsBatchSource.ObsBatchConfig.NAME_PATH, getFullPath(request.getPath()));
         properties.put(AbstractFileSourceConfig.NAME_FORMAT, FileTypeDetector.detectFileFormat(
                 FileTypeDetector.detectFileType(request.getPath())).name().toLowerCase());
         if (!isRoot(request.getPath())) {

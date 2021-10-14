@@ -77,7 +77,7 @@
           }
         },
         {
-          "widget-type": "textbox",
+          "widget-type": "password",
           "label": "Access Key",
           "name": "accessKey",
           "widget-attributes": {
@@ -90,6 +90,14 @@
           "name": "secretKey",
           "widget-attributes": {
             "placeholder": "Huawei Secret Key"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "End Point",
+          "name": "endPoint",
+          "widget-attributes": {
+            "placeholder": "End Point"
           }
         }
       ]
@@ -160,6 +168,9 @@
         },
         {
           "name": "secretKey"
+        },
+        {
+          "name": "endPoint"
         }
       ]
     }

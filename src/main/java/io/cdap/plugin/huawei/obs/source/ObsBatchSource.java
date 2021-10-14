@@ -52,19 +52,16 @@ import javax.annotation.Nullable;
 @Name(ObsBatchSource.NAME)
 @Description("Batch source to use Huawei Obs as a source.")
 @Metadata(properties = {@MetadataProperty(key = Connector.PLUGIN_TYPE, value = ObsConnector.NAME)})
-public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchConfig> {
+public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.ObsBatchConfig> {
     public static final String NAME = "Obs";
 
     @SuppressWarnings("unused")
-    private final S3BatchConfig config;
+    private final ObsBatchConfig config;
 
-    public ObsBatchSource(S3BatchConfig config) {
+    public ObsBatchSource(ObsBatchConfig config) {
         super(config);
         this.config = config;
     }
-
-    public static final String S3A_ACCESS_KEY = "fs.s3a.access.key";
-    public static final String S3A_SECRET_KEY = "fs.s3a.secret.key";
 
     @Override
     protected Map<String, String> getFileSystemProperties(BatchSourceContext context) {
@@ -92,18 +89,18 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchCon
 
     @Override
     protected boolean shouldGetSchema() {
-        return !config.containsMacro(S3BatchConfig.NAME_PATH) && !config.containsMacro(S3BatchConfig.NAME_FORMAT) &&
-                !config.containsMacro(S3BatchConfig.NAME_DELIMITER) && !config.containsMacro(ObsConnectorConfig.NAME_ACCESS_KEY)
-                && !config.containsMacro(S3BatchConfig.NAME_FILE_SYSTEM_PROPERTIES) &&
+        return !config.containsMacro(ObsBatchConfig.NAME_PATH) && !config.containsMacro(ObsBatchConfig.NAME_FORMAT) &&
+                !config.containsMacro(ObsBatchConfig.NAME_DELIMITER) && !config.containsMacro(ObsConnectorConfig.NAME_SECRET_KEY)
+                && !config.containsMacro(ObsBatchConfig.NAME_FILE_SYSTEM_PROPERTIES) &&
                 !config.containsMacro(ObsConnectorConfig.NAME_ACCESS_KEY)
-                && !config.containsMacro(ObsConnectorConfig.NAME_ACCESS_KEY);
+                && !config.containsMacro(ObsConnectorConfig.NAME_END_POINT);
     }
 
     /**
      * Config class that contains properties needed for the S3 source.
      */
     @SuppressWarnings("unused")
-    public static class S3BatchConfig extends AbstractFileSourceConfig {
+    public static class ObsBatchConfig extends AbstractFileSourceConfig {
         public static final String NAME_PATH = "path";
         private static final String NAME_FILE_SYSTEM_PROPERTIES = "fileSystemProperties";
         private static final String NAME_DELIMITER = "delimiter";
@@ -135,7 +132,7 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchCon
                 "This is an advanced feature that requires knowledge of the properties supported by the underlying filesystem.")
         private String fileSystemProperties;
 
-        public S3BatchConfig() {
+        public ObsBatchConfig() {
             fileSystemProperties = GSON.toJson(Collections.emptyMap());
         }
 
@@ -155,9 +152,11 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.S3BatchCon
                     connection.validate(collector);
                 }
             }
+
             if (!containsMacro("path") && !path.startsWith("https://")) {
                 collector.addFailure("Path must start with https://", null).withConfigProperty(NAME_PATH);
             }
+
             if (!containsMacro(NAME_FILE_SYSTEM_PROPERTIES)) {
                 try {
                     getFilesystemProperties();

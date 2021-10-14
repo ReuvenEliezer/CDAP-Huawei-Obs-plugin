@@ -11,7 +11,7 @@
           "widget-type": "toggle",
           "label": "Use Connection",
           "name": "useConnection",
-          "widget-attributes" : {
+          "widget-attributes": {
             "on": {
               "value": "true",
               "label": "YES"
@@ -64,6 +64,14 @@
           "name": "secretKey",
           "widget-attributes": {
             "placeholder": "Huawei Secret Key"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "End Point",
+          "name": "endPoint",
+          "widget-attributes": {
+            "placeholder": "End Point"
           }
         },
         {
@@ -568,6 +576,10 @@
         {
           "type": "property",
           "name": "secretKey"
+        },
+        {
+          "type": "property",
+          "name": "endPoint"
         }
       ]
     },

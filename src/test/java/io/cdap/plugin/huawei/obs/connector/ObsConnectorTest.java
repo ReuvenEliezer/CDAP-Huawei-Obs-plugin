@@ -18,9 +18,9 @@
 //
 //    private static final String bucketName = "eliezer-test";
 //    private static final String endPoint = "obs.ae-ad-1.g42cloud.com";
-//    private static final String accessKey = "FZZTMMWMEDNU41Q9PRHF";
-//    private static final String secretKey = "w3j6iX332106RIChc5A8Zn4xfkRRoct3ZNZbrfpO";
-//obs://eliezer-test/calls.csv
+//    private static final String accessKey = ""; //TODO fill
+//    private static final String secretKey = ""; //TODO fill
+////https://eliezer-test.obs.ae-ad-1.g42cloud.com/calls.csv
 //    @Test
 //    public void doSomeThing() {
 ////        ObsConnectorConfig obsConnectorConfig = new ObsConnectorConfig(accessKey, secretKey, endPoint);
