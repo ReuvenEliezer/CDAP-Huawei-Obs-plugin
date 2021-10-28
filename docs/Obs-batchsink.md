@@ -13,7 +13,7 @@ Properties
 ----------
 **Reference Name:** Name used to uniquely identify this sink for lineage, annotating metadata, etc.
 
-**Path:** Path to write to. For example, 'https://Bucket name.Domain name/Object name' Example: https://bucketname.obs.cn-north-4.myhuaweicloud.com/objectname
+**Path:** Path to write to. For example, 'obs://<Bucket name>/<Object name>'
 
 **Path Suffix:** Time format for the output directory that will be appended to the path.
 For example, the format 'yyyy-MM-dd-HH-mm' will result in a directory of the form '2015-01-01-20-42'.

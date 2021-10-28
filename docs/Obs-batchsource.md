@@ -16,7 +16,7 @@ the credentials does not need to be provided.
 
 **Reference Name:** Name used to uniquely identify this source for lineage, annotating metadata, etc.
 
-**Path:** Path to read from. For example, 'https://Bucket name.Domain name/Object name' Example: https://bucketname.obs.cn-north-4.myhuaweicloud.com/objectname
+**Path:** Path to read from. For example, 'obs://<Bucket name>/<Object name>'
 
 **Format:** Format of the data to read.
 The format must be one of 'avro', 'blob', 'csv', 'delimited', 'json', 'parquet', 'text', or 'tsv'.

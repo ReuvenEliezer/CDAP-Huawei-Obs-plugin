@@ -21,6 +21,9 @@ import io.cdap.cdap.api.annotation.Description;
 import io.cdap.cdap.api.annotation.Macro;
 import io.cdap.cdap.api.plugin.PluginConfig;
 import io.cdap.cdap.etl.api.FailureCollector;
+import io.cdap.plugin.huawei.obs.source.ObsBatchSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +31,7 @@ import javax.annotation.Nullable;
  * Obs connector config which contains the credential related information
  */
 public class ObsConnectorConfig extends PluginConfig {
+    private static final Logger logger = LogManager.getLogger(ObsConnectorConfig.class);
 
     public static final String ACCESS_CREDENTIALS = "Access Credentials";
     public static final String NAME_ACCESS_KEY = "accessKey";

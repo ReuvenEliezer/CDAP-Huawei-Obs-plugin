@@ -37,6 +37,10 @@ import io.cdap.plugin.huawei.obs.common.ObsConnectorConfig;
 import io.cdap.plugin.huawei.obs.common.ObsConstants;
 import io.cdap.plugin.huawei.obs.connector.ObsConnector;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.spark.sql.SparkSession;
+
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,6 +59,9 @@ import javax.annotation.Nullable;
 public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.ObsBatchConfig> {
     public static final String NAME = "Obs";
 
+    private static final Logger logger = LogManager.getLogger(ObsBatchSource.class);
+
+
     @SuppressWarnings("unused")
     private final ObsBatchConfig config;
 
@@ -67,10 +74,11 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.ObsBatchCo
     protected Map<String, String> getFileSystemProperties(BatchSourceContext context) {
         Map<String, String> properties = new HashMap<>(config.getFilesystemProperties());
         if (config.connection.isAccessCredentials()) {
-            if (config.path.startsWith("https://")) {
-                properties.put(ObsConstants.OBS_ACCESS_KEY, config.connection.getAccessKey());
-                properties.put(ObsConstants.OBS_SECRET_KEY, config.connection.getSecretKey());
-                properties.put(ObsConstants.OBS_END_POINT, config.connection.getEndPoint());
+            if (config.path.startsWith("obs://")) {
+            properties.put(ObsConstants.OBS_ACCESS_KEY, config.connection.getAccessKey());
+            properties.put(ObsConstants.OBS_SECRET_KEY, config.connection.getSecretKey());
+            properties.put(ObsConstants.OBS_END_POINT, config.connection.getEndPoint());
+//            properties.put("fs.obs.impl", "org.apache.hadoop.fs.obs.OBSFileSystem");
             } //TODO fix
         }
         if (config.shouldCopyHeader()) {
@@ -110,8 +118,8 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.ObsBatchCo
 
         @Macro
         @Description("Path to file(s) to be read. If a directory is specified, terminate the path name with a '/'. " +
-                "The path must start with https:// as follows: " +
-                "https://Bucket name.Domain name/Object name Example: " +
+                "The path must start with obs:// as follows: " +
+                "obs://<Bucket name>/<Object name> Example: " +
                 "https://bucketname.obs.cn-north-4.myhuaweicloud.com/objectname.")
         private String path;
 
@@ -153,8 +161,8 @@ public class ObsBatchSource extends AbstractFileSource<ObsBatchSource.ObsBatchCo
                 }
             }
 
-            if (!containsMacro("path") && !path.startsWith("https://")) {
-                collector.addFailure("Path must start with https://", null).withConfigProperty(NAME_PATH);
+            if (!containsMacro("path") && !path.startsWith("obs://")) {
+                collector.addFailure("Path must start with obs://", null).withConfigProperty(NAME_PATH);
             }
 
             if (!containsMacro(NAME_FILE_SYSTEM_PROPERTIES)) {

@@ -18,7 +18,7 @@
 package io.cdap.plugin.huawei.obs.common;
 
 /**
- * Constant for S3
+ * Constant for Obs
  */
 public class ObsConstants {
   public static final String OBS_ACCESS_KEY = "fs.obs.accessKey";

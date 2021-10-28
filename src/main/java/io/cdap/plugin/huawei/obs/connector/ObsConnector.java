@@ -34,6 +34,8 @@ import io.cdap.plugin.huawei.obs.common.ObsConnectorConfig;
 import io.cdap.plugin.huawei.obs.common.ObsConstants;
 import io.cdap.plugin.huawei.obs.common.ObsPath;
 import io.cdap.plugin.huawei.obs.source.ObsBatchSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,10 @@ import java.util.Map;
 @Category("Huawei Web Services")
 @Description("Connection to access data in Huawei Obs.")
 public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
+
+    private static final Logger logger = LogManager.getLogger(ObsConnector.class);
+
+
     public static final String NAME = "Obs";
     private static final String DELIMITER = "/";
     static final String BUCKET_TYPE = "bucket";
@@ -65,8 +71,9 @@ public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
 
     public ObsConnector(ObsConnectorConfig config) {
         super(config);
-        this.obsClient = new ObsClient(config.getAccessKey(), config.getSecretKey(), config.getEndPoint());
         this.config = config;
+        this.obsClient = getObsClient();
+        logger.debug("ObsConnector log");
     }
 
     @Override
@@ -194,13 +201,13 @@ public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
         return ObsPath.from(path).getFullPath();
     }
 
-    @Override
-    public void close() throws IOException {
-        super.close();
-        if (obsClient != null) {
-            obsClient.close();
-        }
-    }
+//    @Override
+//    public void close() throws IOException {
+//        super.close();
+//        if (obsClient != null) {
+//            obsClient.close();
+//        }
+//    }
 
 
     @Override
@@ -210,6 +217,7 @@ public class ObsConnector extends AbstractFileConnector<ObsConnectorConfig> {
             return properties;
         }
 
+//        properties.put("fs.obs.impl", "org.apache.hadoop.fs.obs.OBSFileSystem");
         properties.put(ObsConstants.OBS_SECRET_KEY, config.getSecretKey());
         properties.put(ObsConstants.OBS_ACCESS_KEY, config.getAccessKey());
         properties.put(ObsConstants.OBS_END_POINT, config.getEndPoint());

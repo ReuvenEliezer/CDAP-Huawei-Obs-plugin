@@ -17,19 +17,26 @@
 
 package io.cdap.plugin.huawei.obs.common;
 
+import io.cdap.plugin.huawei.obs.connector.ObsConnector;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
  * A path on Obs. Contains information about the bucket and file name (if applicable).
- * A path is of the form https://bucket.domain/name.
+ * A path is of the form hdfs://bucket.domain/name.
  */
 public class ObsPath {
     public static final String ROOT_DIR = "/";
-    public static final String SCHEME = "https://";
+    public static final String SCHEME = "obs://";
     private final String fullPath;
     private final String bucket;
     private final String name;
+
+    private static final Logger logger = LogManager.getLogger(ObsPath.class);
+
 
     private ObsPath(String fullPath, String bucket, String name) {
         this.fullPath = fullPath;
@@ -115,11 +122,11 @@ public class ObsPath {
         }
 
         String file = idx > 0 ? path.substring(idx).replaceAll("^/", "") : "";
-        //TODO fix
         StringBuilder sb = new StringBuilder(SCHEME)
                 .append(bucket)
-                .append(".obs.ae-ad-1.g42cloud.com/") //TODO fix
+                .append(ROOT_DIR)
                 .append(file);
+        logger.info("ObsPath from: {}, to: {}", path, sb.toString());
         return new ObsPath(sb.toString(), bucket, file);
     }
 }
