@@ -555,7 +555,10 @@
           "name": "accessKey"
         },
         {
-          "name": "accessKey"
+          "name": "secretKey"
+        },
+        {
+          "name": "endPoint"
         }
       ]
     },
