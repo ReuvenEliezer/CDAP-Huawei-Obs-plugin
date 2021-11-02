@@ -34,3 +34,7 @@ IAM can only be used if the plugin is run in an AWS environment, such as on EMR.
 
 **Secret Key:** Huawei secret key required for authentication.
 
+**Enable Encryption:** Whether to enable server side encryption. The sole supported algorithm is AES256.
+
+**File System Properties:** Additional properties to use with the OutputFormat when reading the data.
+

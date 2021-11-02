@@ -30,7 +30,6 @@ import io.cdap.plugin.common.LineageRecorder;
 import io.cdap.plugin.format.plugin.AbstractFileSink;
 import io.cdap.plugin.format.plugin.AbstractFileSinkConfig;
 import io.cdap.plugin.huawei.obs.common.ObsConstants;
-import io.cdap.plugin.huawei.obs.connector.ObsConnector;
 
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -46,8 +45,8 @@ import javax.annotation.Nullable;
 @Name("Obs")
 @Description("Batch sink to use Huawei Obs as a sink.")
 public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConfig> {
-//    private static final String ENCRYPTION_VALUE = "AES256";
-//    private static final String S3A_ENCRYPTION = "fs.s3a.server-side-encryption-algorithm"; //TODO fix
+    private static final String ENCRYPTION_VALUE = "AES256";
+    private static final String OBS_ENCRYPTION = "fs.obs.server-side-encryption-algorithm"; //TODO fix
     private static final String ACCESS_CREDENTIALS = "Access Credentials";
 
     private final ObsBatchSinkConfig config;
@@ -66,16 +65,17 @@ public class ObsBatchSink extends AbstractFileSink<ObsBatchSink.ObsBatchSinkConf
                 properties.put(ObsConstants.OBS_SECRET_KEY, config.secretKey);
                 properties.put(ObsConstants.OBS_ACCESS_KEY, config.accessKey);
                 properties.put(ObsConstants.OBS_END_POINT, config.endPoint);
-//      properties.put("fs.obs.impl", "org.apache.hadoop.fs.obs.OBSFileSystem");
+//                properties.put("fs.obs.impl", "org.apache.hadoop.fs.obs.OBSFileSystem");
+//                properties.put("fs.obs.impl", "org.apache.hadoop.fs.obs.OBSFileSystemP");
 
             }  //TODO fix
         }
 
-//    if (config.shouldEnableEncryption()) {
-//      if (config.path.startsWith("obs://")) {
-//        properties.put(S3A_ENCRYPTION, ENCRYPTION_VALUE);
-//      }  //TODO fix
-//    }
+        if (config.shouldEnableEncryption()) {
+            if (config.path.startsWith("obs://")) {
+                properties.put(OBS_ENCRYPTION, ENCRYPTION_VALUE);
+            }  //TODO fix
+        }
         return properties;
     }
 

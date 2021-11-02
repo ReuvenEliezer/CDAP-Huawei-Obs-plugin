@@ -247,6 +247,7 @@
             <groupId>com.huaweicloud</groupId>
             <artifactId>hadoop-huaweicloud</artifactId>
             <version>3.1.1-hw-45</version>
+<!--            <scope>provided</scope>-->
 <!--            <scope>system</scope>-->
 <!--            <systemPath>${project.basedir}/src/main/resources/hadoop-huaweicloud-3.1.1-hw-45.jar/</systemPath>-->
         </dependency>
@@ -296,7 +297,11 @@
 <!--            <artifactId>log4j-api</artifactId>-->
 <!--            <version>2.14.1</version>-->
 <!--        </dependency>-->
-
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -464,6 +469,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M5</version>
                         <configuration>
                             <useFile>false</useFile>
                             <redirectTestOutputToFile>false</redirectTestOutputToFile>
